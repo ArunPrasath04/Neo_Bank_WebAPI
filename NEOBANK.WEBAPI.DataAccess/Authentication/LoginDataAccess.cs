@@ -25,7 +25,7 @@ namespace NEOBANK.WEBAPI.DataAccess.Authentication
                     var p_username = new SqlParameter("@username", username);
                     var p_email = new SqlParameter("@email", email);
                     SqlParameter[] parmCollection = { p_username, p_email };
-                    var result = await context.Database.ExecuteSqlRawAsync("EXEC neo.NB_API_Login @username @email", parmCollection);
+                    var result = await context.Database.ExecuteSqlRawAsync("EXEC neo.NB_API_Login @username, @email", parmCollection);
                     return result;
                 }
             } 

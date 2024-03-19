@@ -34,11 +34,13 @@ namespace NEOBANK.WEBAPI.DataAccess
             string databaseName = ConfigurationManager.AppSettings["DatabaseName"];
             string databaseUsername = ConfigurationManager.AppSettings["DatabaseUsername"];
             string databasePassword = ConfigurationManager.AppSettings["DatabasePassword"];
+            string encrypt = ConfigurationManager.AppSettings["Encrypt"];
 
             string dbConnection = @"Server=" + databaseServerName
                                     + ";Database=" + databaseName
                                     + ";User Id=" + databaseUsername
-                                    + ";Password=" + databasePassword + ";";
+                                    + ";Password=" + databasePassword
+                                    + ";Encrypt=" + encrypt + ";";
             return new DatabaseContext(dbConnection);
         }
 
