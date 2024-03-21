@@ -44,5 +44,35 @@ namespace NEOBANK.WEBAPI.DataAccess.Authentication
                 throw ex;
             }
         }
+
+        public async Task<int> CreateUser(string username, string email, string password, string firstName, string lastName)
+        {
+            try
+            {
+                using (var context = GetFirstDatabaseConnection())
+                {
+                    var p_username = new SqlParameter("@username", username);
+                    var p_email = new SqlParameter("@email", email);
+                    var p_password = new SqlParameter("@password", password);
+                    var p_firstName = new SqlParameter("@firstName", firstName);
+                    var p_lastName = new SqlParameter("@lastName", lastName);
+                    var p_value = new SqlParameter
+                    {
+                        ParameterName = "@value",
+                        SqlDbType = System.Data.SqlDbType.Int,
+                        Direction = System.Data.ParameterDirection.Output
+                    };
+                    SqlParameter[] parmCollection = { p_username, p_email, p_password, p_firstName, p_firstName };
+                    var result = await context.Database.ExecuteSqlRawAsync("EXEC neo.NB_API_CreateUser @username, @email, @password, @firstName, @lastName, @value output", parmCollection);
+
+                    int val = Convert.ToInt32(p_value.Value.ToString());
+                    return val;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

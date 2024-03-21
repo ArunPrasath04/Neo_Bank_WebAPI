@@ -23,5 +23,14 @@ namespace NEOBANK.WEBAPI.Controllers.Authentication
             TokenModel token = new TokenModel();
             return await new LoginService(token).LoginVMail(model);
         }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("api/[controller]/create")]
+        public async Task<int> CreateUser(LoginModel model)
+        {
+            TokenModel token = new TokenModel();
+            return await new LoginService(token).CreateUser(model);
+        }
     }
 }
