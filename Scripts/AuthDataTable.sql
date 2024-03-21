@@ -5,6 +5,7 @@ CREATE TABLE AuthData (
 	username nvarchar(255),
 	email nvarchar(255) ,
 	password nvarchar(max) null,
+	emailSalt nvarchar(max) null,
 	isGoogle tinyint,
 	active int
 )

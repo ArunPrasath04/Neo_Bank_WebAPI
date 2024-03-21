@@ -27,20 +27,29 @@ namespace NEOBANK.WEBAPI.Service.Authentication
             } 
             else
             {
-                byte[] salt = GenerateSalt();
-                model.password = HashPassword(model.password, salt);
+                var emailSalt = await DataAccess.GetSaltbyEmail(model.email);
+                if (emailSalt.Length > 0) 
+                {
+                    byte[] salt = Convert.FromBase64String(emailSalt);
+                    model.password = HashPassword(model.password, salt);
 
-                var isSuccess = await DataAccess.LoginVMail(model.username, model.email, model.password, model.isGoogle);
-                return isSuccess;
+                    var isSuccess = await DataAccess.LoginVMail(model.username, model.email, model.password, model.isGoogle);
+                    return isSuccess;
+                }
+                else
+                {
+                    return -3;
+                }
             }
         }
 
         public async Task<int> CreateUser(LoginModel model)
         {
             byte[] salt = GenerateSalt();
+            var emailHash = Convert.ToBase64String(salt);
             model.password = HashPassword(model.password, salt);
 
-            var isSuccess = await DataAccess.CreateUser(model.username, model.email, model.password, model.firstName, model.lastName);
+            var isSuccess = await DataAccess.CreateUser(model.username, model.email, model.password, emailHash, model.firstName, model.lastName);
             return isSuccess;
         }
 

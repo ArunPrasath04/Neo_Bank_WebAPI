@@ -32,7 +32,7 @@ namespace NEOBANK.WEBAPI.DataAccess.Authentication
                         SqlDbType = System.Data.SqlDbType.Int,
                         Direction = System.Data.ParameterDirection.Output
                     };
-                    SqlParameter[] parmCollection = { p_username, p_email, p_password, p_isGoogle };
+                    SqlParameter[] parmCollection = { p_username, p_email, p_password, p_isGoogle, p_value };
                     var result = await context.Database.ExecuteSqlRawAsync("EXEC neo.NB_API_Login @username, @email, @password, @isGoogle, @value output", parmCollection);
 
                     int val = Convert.ToInt32(p_value.Value.ToString());
@@ -45,7 +45,32 @@ namespace NEOBANK.WEBAPI.DataAccess.Authentication
             }
         }
 
-        public async Task<int> CreateUser(string username, string email, string password, string firstName, string lastName)
+        public async Task<string> GetSaltbyEmail (string email)
+        {
+            try
+            {
+                using (var context = GetFirstDatabaseConnection())
+                {
+                    var p_email = new SqlParameter("@email", email);
+                    var p_code = new SqlParameter
+                    {
+                        ParameterName = "@code",
+                        SqlDbType = System.Data.SqlDbType.NVarChar,
+                        Size = 1000,
+                        Direction = System.Data.ParameterDirection.Output
+                    };
+                    SqlParameter[] parmCollection = { p_email, p_code };
+                    await context.Database.ExecuteSqlRawAsync("EXEC neo.NB_API_GetSaltbyEmail @email, @code output", parmCollection);
+                    return p_code.Value.ToString();
+                }
+            }
+            catch (Exception ex) 
+            { 
+                throw ex; 
+            }
+        }
+
+        public async Task<int> CreateUser(string username, string email, string password, string emailHash, string firstName, string lastName)
         {
             try
             {
@@ -54,6 +79,7 @@ namespace NEOBANK.WEBAPI.DataAccess.Authentication
                     var p_username = new SqlParameter("@username", username);
                     var p_email = new SqlParameter("@email", email);
                     var p_password = new SqlParameter("@password", password);
+                    var p_emailHash = new SqlParameter("@emailHash", emailHash);
                     var p_firstName = new SqlParameter("@firstName", firstName);
                     var p_lastName = new SqlParameter("@lastName", lastName);
                     var p_value = new SqlParameter
@@ -62,8 +88,8 @@ namespace NEOBANK.WEBAPI.DataAccess.Authentication
                         SqlDbType = System.Data.SqlDbType.Int,
                         Direction = System.Data.ParameterDirection.Output
                     };
-                    SqlParameter[] parmCollection = { p_username, p_email, p_password, p_firstName, p_firstName };
-                    var result = await context.Database.ExecuteSqlRawAsync("EXEC neo.NB_API_CreateUser @username, @email, @password, @firstName, @lastName, @value output", parmCollection);
+                    SqlParameter[] parmCollection = { p_username, p_email, p_password, p_emailHash, p_firstName, p_lastName, p_value };
+                    var result = await context.Database.ExecuteSqlRawAsync("EXEC neo.NB_API_CreateUser @username, @email, @password, @emailHash, @firstName, @lastName, @value output", parmCollection);
 
                     int val = Convert.ToInt32(p_value.Value.ToString());
                     return val;
