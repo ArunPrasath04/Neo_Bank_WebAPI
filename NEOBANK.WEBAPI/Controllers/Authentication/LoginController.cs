@@ -21,7 +21,7 @@ namespace NEOBANK.WEBAPI.Controllers.Authentication
         public async Task<int> LoginVMail(LoginModel model)
         {
             TokenModel token = new TokenModel();
-            return await new LoginService(token).LoginVMail(model.username, model.email);
+            return await new LoginService(token).LoginVMail(model);
         }
     }
 }

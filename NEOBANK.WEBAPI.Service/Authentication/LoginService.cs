@@ -17,10 +17,16 @@ namespace NEOBANK.WEBAPI.Service.Authentication
             DataAccess = new LoginDataAccess(GetToken());
         }   
 
-        public async Task<int> LoginVMail (string username, string email)
+        public async Task<int> LoginVMail (LoginModel model)
         {
-            var isSuccess = await DataAccess.LoginVMail(username, email);
-            return isSuccess;
+            if (model.isGoogle == true)
+            {
+                var isSuccess = await DataAccess.LoginVMail(model.username, model.email, model.password, model.isGoogle);
+                return isSuccess;
+            } else
+            {
+                return 0;
+            }
         }
     }
 }
