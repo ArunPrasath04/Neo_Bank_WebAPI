@@ -20,5 +20,9 @@
 		<ProjectReference Include="..\NEOBANK.WEBAPI.Model\NEOBANK.WEBAPI.Model.csproj" />
 		<ProjectReference Include="..\NEOBANK.WEBAPI.Service\NEOBANK.WEBAPI.Service.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Controllers\Home\" />
+	</ItemGroup>
 	
 </Project>

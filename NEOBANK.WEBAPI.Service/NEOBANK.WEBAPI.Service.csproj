@@ -17,4 +17,8 @@
 	    <ProjectReference Include="..\NEOBANK.WEBAPI.Model\NEOBANK.WEBAPI.Model.csproj" />
 		<ProjectReference Include="..\NEOBANK.WEBAPI.DataAccess\NEOBANK.WEBAPI.DataAccess.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Home\" />
+    </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-DROP TABLE neo.AuthData
+DROP TABLE IF EXISTS neo.AuthData
 
 CREATE TABLE AuthData (
 	id int identity(1,1) PRIMARY KEY,

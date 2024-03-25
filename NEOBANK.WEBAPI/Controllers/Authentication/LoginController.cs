@@ -18,10 +18,10 @@ namespace NEOBANK.WEBAPI.Controllers.Authentication
         [AllowAnonymous]
         [HttpPost]
         [Route("api/[controller]")]
-        public async Task<int> LoginVMail(LoginModel model)
+        public async Task<AuthModel> LoginVMail(LoginModel model)
         {
             TokenModel token = new TokenModel();
-            return await new LoginService(token).LoginVMail(model);
+            return await new LoginService(token).LoginVMail(model, _config);
         }
 
         [AllowAnonymous]

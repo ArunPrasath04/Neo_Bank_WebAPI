@@ -1,4 +1,5 @@
-﻿using NEOBANK.WEBAPI.DataAccess.Authentication;
+﻿using Microsoft.Extensions.Configuration;
+using NEOBANK.WEBAPI.DataAccess.Authentication;
 using NEOBANK.WEBAPI.Model.Authentication;
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,19 @@ namespace NEOBANK.WEBAPI.Service.Authentication
             DataAccess = new LoginDataAccess(GetToken());
         }   
 
-        public async Task<int> LoginVMail (LoginModel model)
+        public async Task<AuthModel> LoginVMail (LoginModel model, IConfiguration _config)
         {
+            AuthModel authModel = new AuthModel();
+            
             if (model.isGoogle == true)
             {
-                var isSuccess = await DataAccess.LoginVMail(model.username, model.email, model.password, model.isGoogle);
-                return isSuccess;
+                authModel = await DataAccess.LoginVMail(model.username, model.email, model.password, model.isGoogle);
+                if(authModel.isSuccess == 1)
+                {
+                    var tokenString = new AuthService(model, _config);
+                    authModel.accessToken = tokenString.AccessToken;
+                }
+                return authModel;
             } 
             else
             {
@@ -33,12 +41,19 @@ namespace NEOBANK.WEBAPI.Service.Authentication
                     byte[] salt = Convert.FromBase64String(emailSalt);
                     model.password = HashPassword(model.password, salt);
 
-                    var isSuccess = await DataAccess.LoginVMail(model.username, model.email, model.password, model.isGoogle);
-                    return isSuccess;
+                    authModel = await DataAccess.LoginVMail(model.username, model.email, model.password, model.isGoogle);
+                    if (authModel.isSuccess == 1)
+                    {
+                        model.userId = authModel.userId.ToString();
+                        var tokenString = new AuthService(model, _config);
+                        authModel.accessToken = tokenString.AccessToken;
+                    }
+                    return authModel;
                 }
                 else
                 {
-                    return -3;
+                    authModel.isSuccess = -3;
+                    return authModel;
                 }
             }
         }

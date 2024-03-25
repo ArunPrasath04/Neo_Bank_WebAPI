@@ -9,6 +9,10 @@ namespace NEOBANK.WEBAPI.Model.Authentication
     public class TokenModel
     {
         public string? userId { get; set; }
-        public string DatabaseConnection { get; set; }
+        public string? email { get; set; }
+        public string? username { get; set; }
+        public string? firstName { get; set; }
+        public string? lastName { get; set; }
+        public string? DatabaseConnection { get; set; }
     }
 }

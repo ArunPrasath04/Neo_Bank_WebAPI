@@ -18,6 +18,7 @@ namespace NEOBANK.WEBAPI.DataAccess
         {
             this.token = _token;
             userId = _token.userId;
+            
         }
 
         public DatabaseContext GetDatabaseConnection()

@@ -18,6 +18,7 @@ namespace NEOBANK.WEBAPI.DataAccess
         }
 
         public DbSet<LoginModel> LoginData { get; set; }
+        public DbSet<AuthModel> AuthData { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -16,7 +16,7 @@ namespace NEOBANK.WEBAPI.DataAccess.Authentication
             
         }
 
-        public async Task<int> LoginVMail (string username, string email, string password, bool isGoogle)
+        public async Task<AuthModel> LoginVMail (string username, string email, string password, bool isGoogle)
         {
             try
             {
@@ -26,17 +26,11 @@ namespace NEOBANK.WEBAPI.DataAccess.Authentication
                     var p_email = new SqlParameter("@email", email);
                     var p_password = password != null ? new SqlParameter("@password", password) : new SqlParameter("@password", System.DBNull.Value);
                     var p_isGoogle = new SqlParameter("@isGoogle", isGoogle);
-                    var p_value = new SqlParameter
-                    {
-                        ParameterName = "@value",
-                        SqlDbType = System.Data.SqlDbType.Int,
-                        Direction = System.Data.ParameterDirection.Output
-                    };
-                    SqlParameter[] parmCollection = { p_username, p_email, p_password, p_isGoogle, p_value };
-                    var result = await context.Database.ExecuteSqlRawAsync("EXEC neo.NB_API_Login @username, @email, @password, @isGoogle, @value output", parmCollection);
 
-                    int val = Convert.ToInt32(p_value.Value.ToString());
-                    return val;
+                    SqlParameter[] parmCollection = { p_username, p_email, p_password, p_isGoogle};
+                    List<AuthModel> model = await context.AuthData.FromSqlRaw("EXEC neo.NB_API_Login @username, @email, @password, @isGoogle", parmCollection).ToListAsync();
+
+                    return model.FirstOrDefault();
                 }
             } 
             catch (Exception ex)
